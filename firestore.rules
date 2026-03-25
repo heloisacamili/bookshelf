@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Regras para collection 'books'
+    match /books/{bookId} {
+      // Permite ler apenas se for o dono
+      allow read: if request.auth.uid == resource.data.userId;
+      
+      // Permite criar se o userId no documento for igual ao uid autenticado
+      allow create: if request.auth.uid == request.resource.data.userId &&
+                       request.resource.data.name != null &&
+                       request.resource.data.quantity > 0 &&
+                       request.resource.data.category != null;
+      
+      // Permite atualizar se for o dono
+      allow update: if request.auth.uid == resource.data.userId &&
+                       request.resource.data.name != null &&
+                       request.resource.data.quantity > 0 &&
+                       request.resource.data.category != null;
+      
+      // Permite deletar se for o dono
+      allow delete: if request.auth.uid == resource.data.userId;
+    }
+
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <style>
+      .book { fill: #3B82F6; }
+      .shelf { fill: #1E40AF; }
+    </style>
+  </defs>
+  <g class="shelf">
+    <rect x="10" y="70" width="80" height="8" rx="2"/>
+    <rect x="10" y="85" width="80" height="8" rx="2"/>
+  </g>
+  <g class="book">
+    <rect x="15" y="30" width="12" height="40" rx="1"/>
+    <rect x="32" y="25" width="12" height="45" rx="1"/>
+    <rect x="49" y="28" width="12" height="42" rx="1"/>
+    <rect x="66" y="32" width="12" height="38" rx="1"/>
+  </g>
+</svg>
