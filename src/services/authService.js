@@ -51,12 +51,40 @@ export const logoutUser = async () => {
 };
 
 /**
- * Subscribe to auth state changes
+ * Subscribe to auth state changes (com timeout)
  */
-export const subscribeToAuthChanges = (callback) => {
-  return onAuthStateChanged(auth, (user) => {
-    callback(user);
+export const subscribeToAuthChanges = (callback, errorCallback) => {
+  let timeoutId;
+  let hasResponded = false;
+
+  // Timeout de 5 segundos - depois disso, assume usuário não autenticado
+  timeoutId = setTimeout(() => {
+    if (!hasResponded) {
+      hasResponded = true;
+      console.warn('Firebase auth check timeout após 5s');
+      callback(null); // Considera não autenticado
+    }
+  }, 5000);
+
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (!hasResponded) {
+      hasResponded = true;
+      clearTimeout(timeoutId);
+      callback(user);
+    }
+  }, (error) => {
+    if (!hasResponded) {
+      hasResponded = true;
+      clearTimeout(timeoutId);
+      if (errorCallback) {
+        errorCallback(error);
+      } else {
+        console.error('Auth error:', error);
+      }
+    }
   });
+
+  return unsubscribe;
 };
 
 /**
