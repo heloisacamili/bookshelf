@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { Header } from './components/Header';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -17,7 +17,7 @@ function App() {
       <AuthProvider>
         <div className="flex flex-col min-h-screen bg-gray-50">
           <Header />
-          
+
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
@@ -27,11 +27,11 @@ function App() {
             {/* Protected Routes */}
             <Route
               path="/dashboard"
-              element={
+              element={(
                 <ProtectedRoute>
                   <DashboardPage />
                 </ProtectedRoute>
-              }
+              )}
             />
 
             {/* Catch-all */}

@@ -9,7 +9,6 @@ import {
   getDocs,
   orderBy,
   Timestamp,
-  limit,
 } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 
@@ -35,21 +34,17 @@ const isCacheValid = (userId) => {
  * Add a new book to Firestore
  */
 export const addBook = async (userId, bookData) => {
-  try {
-    const docRef = await addDoc(collection(db, BOOKS_COLLECTION), {
-      ...bookData,
-      userId,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-    });
-    
-    // Invalida cache após adicionar
-    cache.books = null;
-    
-    return docRef.id;
-  } catch (error) {
-    throw error;
-  }
+  const docRef = await addDoc(collection(db, BOOKS_COLLECTION), {
+    ...bookData,
+    userId,
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+  });
+
+  // Invalida cache apos adicionar
+  cache.books = null;
+
+  return docRef.id;
 };
 
 /**
@@ -57,75 +52,63 @@ export const addBook = async (userId, bookData) => {
  * Otimizado para plano gratuito do Firebase
  */
 export const getUserBooks = async (userId) => {
-  try {
-    // Usa cache local se disponível (reduz leituras Firestore)
-    if (isCacheValid(userId)) {
-      return cache.books;
-    }
-
-    const q = query(
-      collection(db, BOOKS_COLLECTION),
-      where('userId', '==', userId),
-      orderBy('createdAt', 'desc')
-    );
-    
-    const querySnapshot = await getDocs(q);
-    const books = [];
-    
-    querySnapshot.forEach((doc) => {
-      books.push({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate() || new Date(),
-        updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-      });
-    });
-    
-    // Armazena em cache
-    cache.books = books;
-    cache.userId = userId;
-    cache.timestamp = Date.now();
-    
-    return books;
-  } catch (error) {
-    throw error;
+  // Usa cache local se disponivel (reduz leituras Firestore)
+  if (isCacheValid(userId)) {
+    return cache.books;
   }
+
+  const q = query(
+    collection(db, BOOKS_COLLECTION),
+    where('userId', '==', userId),
+    orderBy('createdAt', 'desc')
+  );
+
+  const querySnapshot = await getDocs(q);
+  const books = [];
+
+  querySnapshot.forEach((entry) => {
+    books.push({
+      id: entry.id,
+      ...entry.data(),
+      createdAt: entry.data().createdAt?.toDate() || new Date(),
+      updatedAt: entry.data().updatedAt?.toDate() || new Date(),
+    });
+  });
+
+  // Armazena em cache
+  cache.books = books;
+  cache.userId = userId;
+  cache.timestamp = Date.now();
+
+  return books;
 };
 
 /**
  * Update a book
  */
 export const updateBook = async (bookId, updates) => {
-  try {
-    const bookRef = doc(db, BOOKS_COLLECTION, bookId);
-    await updateDoc(bookRef, {
-      ...updates,
-      updatedAt: Timestamp.now(),
-    });
-    
-    // Invalida cache após atualizar
-    cache.books = null;
-  } catch (error) {
-    throw error;
-  }
+  const bookRef = doc(db, BOOKS_COLLECTION, bookId);
+  await updateDoc(bookRef, {
+    ...updates,
+    updatedAt: Timestamp.now(),
+  });
+
+  // Invalida cache apos atualizar
+  cache.books = null;
 };
 
 /**
  * Delete a book
  */
 export const deleteBook = async (bookId) => {
-  try {
-    await deleteDoc(doc(db, BOOKS_COLLECTION, bookId));
-    
-    // Invalida cache após deletar
-    cache.books = null;
-  } catch (error) {
-    throw error;
-  }
+  await deleteDoc(doc(db, BOOKS_COLLECTION, bookId));
+
+  // Invalida cache apos deletar
+  cache.books = null;
 };
 
 /**
- * Limpar cache manualmente (usado para refresh forçado)
+ * Limpar cache manualmente (usado para refresh forcado)
  */
 export const clearBooksCache = () => {
   cache.books = null;
@@ -137,28 +120,24 @@ export const clearBooksCache = () => {
  * Search books by category
  */
 export const getBooksByCategory = async (userId, category) => {
-  try {
-    const q = query(
-      collection(db, BOOKS_COLLECTION),
-      where('userId', '==', userId),
-      where('category', '==', category),
-      orderBy('createdAt', 'desc')
-    );
-    
-    const querySnapshot = await getDocs(q);
-    const books = [];
-    
-    querySnapshot.forEach((doc) => {
-      books.push({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate() || new Date(),
-        updatedAt: doc.data().updatedAt?.toDate() || new Date(),
-      });
+  const q = query(
+    collection(db, BOOKS_COLLECTION),
+    where('userId', '==', userId),
+    where('category', '==', category),
+    orderBy('createdAt', 'desc')
+  );
+
+  const querySnapshot = await getDocs(q);
+  const books = [];
+
+  querySnapshot.forEach((entry) => {
+    books.push({
+      id: entry.id,
+      ...entry.data(),
+      createdAt: entry.data().createdAt?.toDate() || new Date(),
+      updatedAt: entry.data().updatedAt?.toDate() || new Date(),
     });
-    
-    return books;
-  } catch (error) {
-    throw error;
-  }
+  });
+
+  return books;
 };

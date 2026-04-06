@@ -11,43 +11,31 @@ import { auth } from './firebaseConfig';
  * Register a new user
  */
 export const registerUser = async (email, password, displayName) => {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    
-    // Update user profile with display name
-    if (displayName) {
-      await updateProfile(userCredential.user, {
-        displayName: displayName,
-      });
-    }
-    
-    return userCredential.user;
-  } catch (error) {
-    throw error;
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+  // Update user profile with display name
+  if (displayName) {
+    await updateProfile(userCredential.user, {
+      displayName,
+    });
   }
+
+  return userCredential.user;
 };
 
 /**
  * Login user with email and password
  */
 export const loginUser = async (email, password) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
-  } catch (error) {
-    throw error;
-  }
+  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  return userCredential.user;
 };
 
 /**
  * Logout current user
  */
 export const logoutUser = async () => {
-  try {
-    await signOut(auth);
-  } catch (error) {
-    throw error;
-  }
+  await signOut(auth);
 };
 
 /**
@@ -57,12 +45,12 @@ export const subscribeToAuthChanges = (callback, errorCallback) => {
   let timeoutId;
   let hasResponded = false;
 
-  // Timeout de 5 segundos - depois disso, assume usuário não autenticado
+  // Timeout de 5 segundos - depois disso, assume usuario nao autenticado
   timeoutId = setTimeout(() => {
     if (!hasResponded) {
       hasResponded = true;
-      console.warn('Firebase auth check timeout após 5s');
-      callback(null); // Considera não autenticado
+      console.warn('Firebase auth check timeout apos 5s');
+      callback(null); // Considera nao autenticado
     }
   }, 5000);
 
@@ -92,15 +80,15 @@ export const subscribeToAuthChanges = (callback, errorCallback) => {
  */
 export const getErrorMessage = (error) => {
   const errorMap = {
-    'auth/email-already-in-use': 'Este email já está cadastrado',
-    'auth/invalid-email': 'Email inválido',
-    'auth/weak-password': 'Senha muito fraca. Mínimo 6 caracteres',
-    'auth/user-not-found': 'Usuário não encontrado',
+    'auth/email-already-in-use': 'Este email ja esta cadastrado',
+    'auth/invalid-email': 'Email invalido',
+    'auth/weak-password': 'Senha muito fraca. Minimo 6 caracteres',
+    'auth/user-not-found': 'Usuario nao encontrado',
     'auth/wrong-password': 'Senha incorreta',
-    'auth/account-exists-with-different-credential': 'Conta já existe com outro método de login',
-    'auth/operation-not-allowed': 'Operação não permitida',
-    'auth/user-cancelled': 'Operação cancelada pelo usuário',
+    'auth/account-exists-with-different-credential': 'Conta ja existe com outro metodo de login',
+    'auth/operation-not-allowed': 'Operacao nao permitida',
+    'auth/user-cancelled': 'Operacao cancelada pelo usuario',
   };
-  
-  return errorMap[error.code] || error.message || 'Erro ao processar autenticação';
+
+  return errorMap[error.code] || error.message || 'Erro ao processar autenticacao';
 };

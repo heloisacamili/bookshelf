@@ -4,10 +4,20 @@ on:
   push:
     branches:
       - dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+
+concurrency:
+  group: deploy-dev
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: development
 
     steps:
       - name: Checkout code
