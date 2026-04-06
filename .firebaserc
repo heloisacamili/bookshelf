@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "projeto-receitas-dev"
+    "default": "projeto-receitas-dev",
+    "dev": "projeto-receitas-dev",
+    "prod": "projeto-receitas-2ae39"
   }
 }

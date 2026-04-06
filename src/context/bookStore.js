@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { getUserBooks, addBook, updateBook, deleteBook, getBooksByCategory } from '../services/bookService';
 
-export const useBookStore = create((set, get) => ({
+export const useBookStore = create((set) => ({
   books: [],
   loading: false,
   error: null,
