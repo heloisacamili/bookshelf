@@ -2,6 +2,12 @@
 
 Aplicacao web em React com Firebase para autenticacao, persistencia no Firestore e deploy automatizado com GitHub Actions.
 
+## URLs do projeto
+
+- Deploy dev: `https://projeto-receitas-dev.web.app`
+- Deploy prod: `https://projeto-receitas-2ae39.web.app`
+- Repositorio Git: `https://github.com/heloisacamili/bookshelf`
+
 ## Visao geral
 
 Hoje o projeto esta organizado com dois ambientes Firebase:
@@ -34,7 +40,7 @@ Fluxo de deploy:
 npm install
 ```
 
-2. Crie um arquivo `.env.local` com base em [.env.example](C:\Users\Rosane\Documents\projeto receitas\.env.example).
+2. Crie um arquivo `.env.local` com base em [.env.example](.env.example).
 
 3. Preencha as variaveis do Firebase:
 
@@ -69,18 +75,18 @@ npm run lint
 
 - Branch: `dev`
 - Firebase project id: `projeto-receitas-dev`
-- Workflow: [.github/workflows/deploy-dev.yml](C:\Users\Rosane\Documents\projeto receitas\.github\workflows\deploy-dev.yml)
+- Workflow: [.github/workflows/deploy-dev.yml](.github/workflows/deploy-dev.yml)
 
 ### Producao
 
 - Branch: `main`
 - Firebase project id: `projeto-receitas-2ae39`
-- Workflow: [.github/workflows/deploy-prod.yml](C:\Users\Rosane\Documents\projeto receitas\.github\workflows\deploy-prod.yml)
+- Workflow: [.github/workflows/deploy-prod.yml](.github/workflows/deploy-prod.yml)
 
 ### Qualidade
 
 - Pull requests para `dev` e `main`
-- Workflow: [.github/workflows/code-quality.yml](C:\Users\Rosane\Documents\projeto receitas\.github\workflows\code-quality.yml)
+- Workflow: [.github/workflows/code-quality.yml](.github/workflows/code-quality.yml)
 
 ## GitHub Secrets necessarios
 
@@ -106,7 +112,7 @@ npm run lint
 - `PROD_FIREBASE_DATABASE_URL`
 - `FIREBASE_PROD_SERVICE_ACCOUNT_JSON`
 
-O detalhamento do setup esta em [GITHUB_ACTIONS_ENV_SETUP.md](C:\Users\Rosane\Documents\projeto receitas\GITHUB_ACTIONS_ENV_SETUP.md).
+O detalhamento do setup esta em [GITHUB_ACTIONS_ENV_SETUP.md](GITHUB_ACTIONS_ENV_SETUP.md).
 
 ## Estrutura principal
 
